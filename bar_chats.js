@@ -15,8 +15,8 @@ const visObject = {
     }
         
         
-        const data_labels = queryResponse.fields.dimension_like.map(item => item.name)
-        const actual_data = queryResponse.fields.measure_like.map(item => item.value)
+        const data_labels = queryResponse.fields.dimensions.map(item => item.name)
+        const actual_data = queryResponse.fields.dimensions.map(item => item.value)
         
        /* data.forEach((d)=>{
             data_labels.push(d["category"])
