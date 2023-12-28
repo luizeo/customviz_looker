@@ -4,13 +4,24 @@ const visObject = {
     },
 
     updateAsync: function (data, element, config, queryResponse, details, doneRendering) {
-        const data_labels = []
-        const actual_data = []
+        
+    // Clear any errors from previous updates
+    this.clearErrors();
 
-        data.forEach((d)=>{
+    // Throw some errors and exit if the shape of the data isn't what this chart needs
+    if (queryResponse.fields.dimensions.length == 0) {
+      this.addError({title: "No Dimensions", message: "This chart requires dimensions."});
+      return;
+    }
+        
+        
+        const data_labels = queryResponse.fields.dimension_like.map(item => item.name)
+        const actual_data = queryResponse.fields.measure_like.map(item => item.value)
+        
+       /* data.forEach((d)=>{
             data_labels.push(d["category"])
             actual_data.push(d["value"])
-        })
+        })*/
 
         const vizCanvas = document.createElement('canvas')
         vizCanvas.setAttribute("id", "myChart")
