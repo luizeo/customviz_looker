@@ -1,0 +1,108 @@
+const visObject = {
+    create: function(element, config){
+        element.innerHTML = "";
+    },
+
+    updateAsync: function (data, element, config, queryResponse, details, doneRendering) {
+        const data_labels = []
+        const actual_data = []
+
+        data.forEach((d)=>{
+            data_labels.push(d["category"])
+            actual_data.push(d["value"])
+        })
+
+        const vizCanvas = document.createElement('canvas')
+        vizCanvas.setAttribute("id", "myChart")
+
+        const vizDiv = document.getElementById("vis")
+        vizDiv.appendChild(vizCanvas)
+
+        const ctx = document.getElementById("myChart")
+      
+      const myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data_labels,
+                datasets: [{
+                    //label: data_labels,
+                    
+                    data: actual_data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(153, 102, 180, 0.2)',
+                        'rgba(153, 102, 185, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(153, 102, 180, 1)',
+                        'rgba(153, 102, 185, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+        
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+
+              maintainAspectRatio: false
+
+            },
+options: {
+      maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: "bottom",
+        align: "center",
+        fontFamily: "Arial",
+        labels: {
+          usePointStyle: true,
+          fontColor: "red",
+          generateLabels(chart) {
+            const data = chart.data;
+            if (data.labels.length && data.datasets.length) {
+              const {labels: {pointStyle}} = chart.legend.options;
+  
+              return data.labels.map((label, i) => {
+                const meta = chart.getDatasetMeta(0);
+                const style = meta.controller.getStyle(i);
+                
+                return {
+                  text: label + ' - ' + chart.data.datasets[0].data[i],
+                  fillStyle: style.backgroundColor,
+                  strokeStyle: style.borderColor,
+                  lineWidth: style.borderWidth,
+                  pointStyle: pointStyle,
+                  hidden: !chart.getDataVisibility(i),
+  
+                  index: i
+                };
+              });
+            }
+            return [];
+          }
+        }
+    }
+      }
+    }
+        
+        });
+
+        doneRendering()
+    }
+};
+
+looker.plugins.visualizations.add(visObject);
